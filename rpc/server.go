@@ -22,7 +22,7 @@ import (
 
 var typeOfError = reflect.TypeOf((*error)(nil)).Elem()
 var invalidRequest = struct{}{}
-var nilRequestBody interface{}
+var discardRequestBody = &struct{}{} 
 
 
 type methodType struct {
@@ -341,9 +341,7 @@ func (server *Server) readRequest(codec *ServerCodec) (service *service, mtype *
 		if !keepReading {
 			return
 		}
-		// just discard body
-        var discardBody interface{}
-        errx := codec.ReadRequestBody(&discardBody)
+        errx := codec.ReadRequestBody(discardRequestBody)
         if errx != nil {
             log.Println("discard body error",errx)
         }
